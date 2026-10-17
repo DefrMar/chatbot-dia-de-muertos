@@ -1,35 +1,45 @@
+import streamlit as st
 from motor_inferencia import inferir
 
 
-def iniciar_chatbot():
+st.set_page_config(
+    page_title="Chatbot Día de Muertos",
+    page_icon="💀",
+    layout="centered"
+)
 
-    print("=" * 50)
-    print("CHATBOT - DÍA DE MUERTOS")
-    print("=" * 50)
+st.title("💀 Chatbot Día de Muertos")
 
-    print(
-        "\nHola, soy un sistema experto sobre el Día de Muertos."
-    )
+st.write(
+    "Soy un sistema experto enfocado exclusivamente "
+    "en el Día de Muertos."
+)
 
-    print(
-        "Puedes preguntarme sobre altares, flores, velas, "
-        "pan de muerto, calaveritas y fechas."
-    )
+if "mensajes" not in st.session_state:
+    st.session_state.mensajes = []
 
-    print("\nEscribe 'salir' para terminar.\n")
+for mensaje in st.session_state.mensajes:
+    with st.chat_message(mensaje["rol"]):
+        st.write(mensaje["contenido"])
 
-    while True:
+pregunta = st.chat_input("Escribe tu pregunta...")
 
-        mensaje = input("Tú: ")
+if pregunta:
 
-        if mensaje.lower().strip() == "salir":
-            print("\nChatbot: Hasta luego.")
-            break
+    st.session_state.mensajes.append({
+        "rol": "user",
+        "contenido": pregunta
+    })
 
-        respuesta = inferir(mensaje)
+    with st.chat_message("user"):
+        st.write(pregunta)
 
-        print(f"\nChatbot: {respuesta}\n")
+    respuesta = inferir(pregunta)
 
+    st.session_state.mensajes.append({
+        "rol": "assistant",
+        "contenido": respuesta
+    })
 
-if __name__ == "__main__":
-    iniciar_chatbot()
+    with st.chat_message("assistant"):
+        st.write(respuesta)

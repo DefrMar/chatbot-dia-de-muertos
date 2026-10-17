@@ -1,7 +1,6 @@
 from reglas import REGLAS
 from conocimiento import RESPUESTAS
 
-
 def normalizar_texto(texto):
     texto = texto.lower().strip()
 
@@ -17,7 +16,21 @@ def normalizar_texto(texto):
     for original, nuevo in reemplazos.items():
         texto = texto.replace(original, nuevo)
 
-    return texto
+    palabras_ignorar = {
+        "el", "la", "los", "las",
+        "un", "una", "unos", "unas"
+    }
+
+    palabras = texto.split()
+
+    palabras = [
+        palabra
+        for palabra in palabras
+        if palabra not in palabras_ignorar
+    ]
+
+    return " ".join(palabras)
+
 
 
 def encontrar_reglas_aplicables(mensaje):
